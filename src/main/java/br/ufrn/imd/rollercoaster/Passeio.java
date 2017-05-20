@@ -42,19 +42,18 @@ public class Passeio extends Thread implements Runnable{
 	}
 
 	public void run() {
-		System.out.println(ParqueDiversoes.GLOBAL_TIME + " [PASSEIO] passeando...");
+		Notes.print("[PASSEIO] Iniciando passeio pela trilha.");
 		while (distanciaPercorrida < trilha.getDistancia()) {
 			double percent = (distanciaPercorrida*(1.0) / trilha.getDistancia())*100.0;
-			distanciaPercorrida+=1;
-			System.out.println(ParqueDiversoes.GLOBAL_TIME + " [PASSEIO] passeando na Montanha Russa ("+percent+"%)");
+			distanciaPercorrida += 1;
+			Notes.print("[PASSEIO] passeando na Montanha Russa ("+percent+"%)");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+		Notes.print("[PASSEIO] Fim do passeio ("+100+"%)");
 	}
 
 

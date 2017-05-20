@@ -1,6 +1,6 @@
 package br.ufrn.imd.rollercoaster;
 
-public class ParqueDiversoes extends Thread implements Runnable{
+public class ParqueDiversoes extends Thread{
 	private MontanhaRussa montanhaRussa;
 	
 	public static int GLOBAL_TIME;

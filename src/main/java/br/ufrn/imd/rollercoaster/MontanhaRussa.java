@@ -1,7 +1,6 @@
 package br.ufrn.imd.rollercoaster;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class MontanhaRussa {
@@ -38,52 +37,9 @@ public class MontanhaRussa {
 	}
 	
 	public void tentarBrincar(Passageiro passageiro) {
-		System.out.println(ParqueDiversoes.GLOBAL_TIME + " [MONTANHA_RUSSA] "+passageiro.getID()+ " está na fila da Montanha Russa.");
-		filaEmbarque.add(passageiro);
-		
-		
-//		try {
-//			 synchronized (passageiro) {
-//		         while (!((filaEmbarque.size() >= carro.getCapacidade()) && !carro.isEmMovimento())){
-//		        	 passageiro.wait();
-//		         }
-//		        	 
-//		     }
-//
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-		
-//		System.out.println((filaEmbarque.size() == carro.getCapacidade()) +" - "+ (!carro.isEmMovimento()));
-		synchronized (passageiro) {
-			if(!carro.isEmMovimento()){
-				if(filaEmbarque.size() >= carro.getCapacidade() && carro.getQtdPassageiros() == 0){
-					
-					System.out.println(ParqueDiversoes.GLOBAL_TIME + " [MONTANHA_RUSSA] Ativar Novo Embarque.");
-					
-					Iterator<Passageiro> itFilaEmbarque = filaEmbarque.iterator();
-					while (itFilaEmbarque.hasNext() && (carro.getQtdPassageiros() < carro.getCapacidade())) {
-//						System.out.println("AQUI 0");
-						itFilaEmbarque.next().board(carro);
-//						System.out.println("AQUI 1");
-						itFilaEmbarque.remove();
-//						System.out.println("AQUI 2");
-					}
-				}
-			}
-		}
-
-//		passageiro.stop();
-		try {
-			synchronized (passageiro) {
-				while (filaEmbarque.contains(passageiro) || carro.contemPassageiro(passageiro)) {
-					passageiro.wait();
-				}
-			}
-
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		Notes.print("[MONTANHA_RUSSA] "+passageiro.getID()+ " está chegando na Montanha Russa.");
+		passageiro.board(carro);
+		Notes.print("[MONTANHA_RUSSA] "+passageiro.getID()+ " saindo da Montanha Russa.");
 	}
 	
 	public List<Passageiro> getFilaEmbarque() {
@@ -93,18 +49,5 @@ public class MontanhaRussa {
 	public void setFilaEmbarque(List<Passageiro> filaEmbarque) {
 		this.filaEmbarque = filaEmbarque;
 	}
-
-	public synchronized void ativarNovoEmbarque(){
-//		System.out.println(ParqueDiversoes.GLOBAL_TIME + " [MONTANHA_RUSSA] Ativar Novo Embarque.");
-//		//o carro permite a entrada de exatamente C passageiros;
-//		for (int i = 0; i < carro.getCapacidade(); i++) {
-//			filaEmbarque.get(i).board(carro);
-//		}
-//		
-//		for (int i = 0; i < carro.getCapacidade(); i++) {
-//			filaEmbarque.remove(i);
-//		}
-	}
-	
 
 }
