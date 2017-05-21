@@ -11,6 +11,7 @@ public class MontanhaRussa {
 	private Trilha trilha;
 	private int qtdPasseiosLimite;
 	private int qtdPasseios;
+	private boolean aberto;
 	
 	private List<Passageiro> filaEmbarque;
 	
@@ -24,6 +25,7 @@ public class MontanhaRussa {
 	
 	public void init(){
 		this.carro.start();
+		setAberto(true);
 	}
 	
 	public int getQtdPasseiosLimite() {
@@ -61,10 +63,18 @@ public class MontanhaRussa {
 
 	public void someQtdPasseios() {
 		qtdPasseios+=1;
-		Notes.print(TAG + qtdPasseios + " passeios realizados.");
+		Notes.print(TAG + qtdPasseios+"/"+qtdPasseiosLimite + " passeios realizados.");
 	}
 	
 	public int getQtdPasseios() {
 		return qtdPasseios;
+	}
+
+	public boolean isAberto() {
+		return aberto;
+	}
+
+	public void setAberto(boolean aberto) {
+		this.aberto = aberto;
 	}
 }

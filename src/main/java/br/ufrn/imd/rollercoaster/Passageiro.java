@@ -27,10 +27,11 @@ public class Passageiro extends Thread implements Runnable {
 	public void run() {
 		Notes.print(TAG + id + " Chegou ao Parque de diversões.");
 		MontanhaRussa montanhaRussaREF = parqueDiversoesREF.getMontanhaRussa();
-		while (true) {
+		while (parqueDiversoesREF.getMontanhaRussa().isAberto()) {
 			montanhaRussaREF.tentarBrincar(this);
 			passearNoParque();
 		}
+		Notes.print(TAG + id + " Indo Embora.");
 	}
 
 	public void board(Carro carro) {

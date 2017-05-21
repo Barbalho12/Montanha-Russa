@@ -11,10 +11,10 @@ public class Main {
 		
 		Notes.print(TAG + "Programa Iniciado.");
 		
-		int CAPACIDADE_CARRO = 15;
-		int DISTANCIA_TRILHA = 5;
-		int QUANTIDADE_PASSAGEIROS =  100;
-		int QUANTIDADE_PASSEIOS_POR_DIA =  50;
+		int CAPACIDADE_CARRO = 4;
+		int DISTANCIA_TRILHA = 4;
+		int QUANTIDADE_PASSAGEIROS =  6;
+		int QUANTIDADE_PASSEIOS_POR_DIA =  2;
 		
 		MontanhaRussa montanhaRussa = new MontanhaRussa(CAPACIDADE_CARRO, DISTANCIA_TRILHA, QUANTIDADE_PASSEIOS_POR_DIA);
 		

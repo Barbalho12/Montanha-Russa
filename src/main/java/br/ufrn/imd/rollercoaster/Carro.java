@@ -41,19 +41,27 @@ public class Carro extends Thread implements Runnable {
 				}
 			}
 		}
+		montanhaRussaREF.setAberto(false);
 	}
 
 	public void embarcar(Passageiro passageiro) {
 		try {
-			if (semaphore.availablePermits() == 0)
+			if (semaphore.availablePermits() == 0){
 				Notes.print(TAG+"Fila de espera: " + (semaphore.getQueueLength() + 1) + ".");
-
+			}
+			
 			semaphore.acquire();
+			
+			if(montanhaRussaREF.isAberto()){
+				passageiros.add(passageiro);
 
-			passageiros.add(passageiro);
-
-			Notes.print(TAG + passageiro.getID() + " embarcou no carro.");
-			Notes.print(TAG + "Lotação do carro: " + passageiros.size() + ". " + passageiros.toString());
+				Notes.print(TAG + passageiro.getID() + " embarcou no carro.");
+				Notes.print(TAG + "Lotação do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
+			}else{
+				Notes.print(TAG + passageiro.getID() + " Não conseguiu embarcar.");
+				passageiro.unboard();
+			}
+			
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
