@@ -5,7 +5,7 @@ import java.util.List;
 
 public class MontanhaRussa {
 	
-	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
+	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"]\t";
 	
 	private Carro carro;
 	private Trilha trilha;
@@ -48,9 +48,9 @@ public class MontanhaRussa {
 	}
 	
 	public void tentarBrincar(Passageiro passageiro) {
-		Notes.print(TAG + passageiro.getID()+ " está chegando na Montanha Russa.");
+		Notes.print(TAG + passageiro.toString()+ " está chegando na Montanha Russa.");
 		passageiro.board(carro);
-		Notes.print(TAG + passageiro.getID()+ " saindo da Montanha Russa.");
+		Notes.print(TAG + passageiro.toString()+ " saindo da Montanha Russa.");
 	}
 	
 	public List<Passageiro> getFilaEmbarque() {
@@ -63,7 +63,11 @@ public class MontanhaRussa {
 
 	public void someQtdPasseios() {
 		qtdPasseios+=1;
-		Notes.print(TAG + qtdPasseios+"/"+qtdPasseiosLimite + " passeios realizados.");
+		Notes.print(TAG + qtdPasseios+"/"+qtdPasseiosLimite + " passeios iniciados.");
+		if(qtdPasseios == qtdPasseiosLimite){
+			setAberto(false);
+			Notes.print(TAG + "O limite de passeios foi atingido.");
+		}
 	}
 	
 	public int getQtdPasseios() {

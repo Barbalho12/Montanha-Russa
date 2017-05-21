@@ -5,34 +5,31 @@ import java.util.List;
 
 public class Main {
 	
-	private static final String TAG = "["+Main.class.getSimpleName().toUpperCase()+"] ";
+	private static final String TAG = "["+Main.class.getSimpleName().toUpperCase()+"]\t";
 	
 	public static void main(String args[]){
 		
 		Notes.print(TAG + "Programa Iniciado.");
 		
-		int CAPACIDADE_CARRO = 4;
-		int DISTANCIA_TRILHA = 4;
-		int QUANTIDADE_PASSAGEIROS =  6;
-		int QUANTIDADE_PASSEIOS_POR_DIA =  2;
+		int CAPACIDADE_CARRO = 10;
+		int DISTANCIA_TRILHA = 5;
+		int QUANTIDADE_PASSAGEIROS =  40;
+		int QUANTIDADE_PASSEIOS_POR_DIA =  10;
 		
 		MontanhaRussa montanhaRussa = new MontanhaRussa(CAPACIDADE_CARRO, DISTANCIA_TRILHA, QUANTIDADE_PASSEIOS_POR_DIA);
-		
 		
 		ParqueDiversoes parqueDiversoes = new ParqueDiversoes(montanhaRussa);
 		
 		//Criação de passageiros
-		List<Passageiro> passageiros = new ArrayList<Passageiro>();
+		List<Visitante> visitantes = new ArrayList<Visitante>();
 		for (int i = 0; i < QUANTIDADE_PASSAGEIROS; i++) {
+			
+			/*Os visitantes terão ciclo de vida de passageiro da motanha russa*/
 			Passageiro passageiro = new Passageiro(i, parqueDiversoes);
-			passageiros.add(passageiro);
+			visitantes.add(passageiro);
 		}
 		
-		
-		parqueDiversoes.init(passageiros);
-	
-		
-		
+		parqueDiversoes.init(visitantes);
 
 	}
 

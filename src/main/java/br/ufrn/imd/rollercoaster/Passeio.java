@@ -1,8 +1,8 @@
 package br.ufrn.imd.rollercoaster;
 
-public class Passeio extends Thread implements Runnable{
+public class Passeio extends Thread{
 	
-	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
+	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"]\t";
 	
 	private double tempo;
 	
@@ -13,10 +13,10 @@ public class Passeio extends Thread implements Runnable{
 	private double velocidade;
 
 	public Passeio(Trilha trilha){
-		tempo = 0;
-		distanciaPercorrida = 0;
+		this.tempo = 0;
+		this.distanciaPercorrida = 0;
 		this.trilha = trilha;
-		velocidade= 0;
+		this.velocidade= 0;
 	}
 
 	public double getTempo() {
@@ -59,6 +59,4 @@ public class Passeio extends Thread implements Runnable{
 		Notes.print(TAG + "Fim do passeio ("+100+"%)");
 	}
 
-
-	
 }

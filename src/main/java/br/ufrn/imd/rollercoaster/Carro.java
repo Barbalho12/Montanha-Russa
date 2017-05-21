@@ -5,76 +5,39 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class Carro extends Thread implements Runnable {
+public class Carro extends Thread{
 	
-	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
+	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"]\t";
 
 	private MontanhaRussa montanhaRussaREF;
 	private List<Passageiro> passageiros;
 	private int capacidade;
 	private Semaphore semaphore;
 
-	public Carro() {
-		this.setCapacidade(0);
-		this.passageiros = new ArrayList<Passageiro>();
-	}
-
 	public Carro(int capacidade, MontanhaRussa montanhaRussaREF) {
 		this.setCapacidade(capacidade);
 		this.passageiros = new ArrayList<Passageiro>();
 		this.montanhaRussaREF = montanhaRussaREF;
 		semaphore = new Semaphore(capacidade);
+		FecharCarro();
 	}
-
+	
 	public void run() {
-		while ( montanhaRussaREF.getQtdPasseios() < montanhaRussaREF.getQtdPasseiosLimite()) {
-			if (semaphore.availablePermits() == 0) {
-				Passeio passeio = new Passeio(montanhaRussaREF.getTrilha());
-				passeio.start();
-				try {
-					passeio.join();
-					montanhaRussaREF.someQtdPasseios();
-					unload();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-					System.exit(0);
-				}
+		load();
+		while ( montanhaRussaREF.isAberto()) {
+			if (carroCheio()) {
+				iniciarPasseio();
+				unload();
+				load();
 			}
 		}
-		montanhaRussaREF.setAberto(false);
+		semaphore.release(semaphore.getQueueLength());
 	}
-
-	public void embarcar(Passageiro passageiro) {
-		try {
-			if (semaphore.availablePermits() == 0){
-				Notes.print(TAG+"Fila de espera: " + (semaphore.getQueueLength() + 1) + ".");
-			}
-			
-			semaphore.acquire();
-			
-			if(montanhaRussaREF.isAberto()){
-				passageiros.add(passageiro);
-
-				Notes.print(TAG + passageiro.getID() + " embarcou no carro.");
-				Notes.print(TAG + "Lotação do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
-			}else{
-				Notes.print(TAG + passageiro.getID() + " Não conseguiu embarcar.");
-				passageiro.unboard();
-			}
-			
-
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			System.exit(0);
+	
+	public void load() {
+		if (montanhaRussaREF.isAberto()){
+			Notes.print(TAG + "load.");
 		}
-	}
-
-	public boolean contemPassageiro(Passageiro passageiro) {
-		return passageiros.contains(passageiro);
-	}
-
-	public void load() /* throws Exception */ {
-		Notes.print(TAG + "load.");
 		semaphore.release(capacidade);
 	}
 
@@ -86,8 +49,62 @@ public class Carro extends Thread implements Runnable {
 			itPassageiros.next().unboard();
 			itPassageiros.remove();
 		}
+	}
+	
+	public void iniciarPasseio(){
+		montanhaRussaREF.someQtdPasseios();
+		Passeio passeio = new Passeio(montanhaRussaREF.getTrilha());
+		passeio.start();
+		try {
+			passeio.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+	
+	public boolean carroCheio(){
+		return semaphore.availablePermits() == 0;
+	}
 
-		load();
+	public boolean embarcar(Passageiro passageiro) {
+		try {
+			if (semaphore.availablePermits() == 0){
+				Notes.print(TAG+"Fila de espera: " + (semaphore.getQueueLength() + 1) + ".");
+			}
+			
+			semaphore.acquire();
+			
+			if(montanhaRussaREF.isAberto()){
+
+				passageiros.add(passageiro);
+
+				Notes.print(TAG + passageiro.toString() + " embarcou no carro.");
+				Notes.print(TAG + "Lotação do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
+			}else{
+				Notes.print(TAG + passageiro.toString() + " Não conseguiu embarcar.");
+				return false;
+			}
+			
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		return true;
+	}
+	
+	public void FecharCarro(){
+		try {
+			semaphore.acquire(capacidade);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+
+	public boolean contemPassageiro(Passageiro passageiro) {
+		return passageiros.contains(passageiro);
 	}
 
 	public int getCapacidade() {
