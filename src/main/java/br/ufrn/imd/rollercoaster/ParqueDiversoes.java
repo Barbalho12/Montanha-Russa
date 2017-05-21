@@ -1,32 +1,49 @@
 package br.ufrn.imd.rollercoaster;
 
-public class ParqueDiversoes extends Thread{
+import java.util.List;
+
+import br.ufrn.imd.rollercoaster.util.RandInt;
+
+public class ParqueDiversoes{
+	
+	@SuppressWarnings("unused")
+	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
+	
 	private MontanhaRussa montanhaRussa;
-	
-	public static int GLOBAL_TIME;
-	
-	public ParqueDiversoes(){
-		GLOBAL_TIME = 0;
-		this.start();
-	}
-	
-	@Override
-	public void run() {
-		while (true) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			GLOBAL_TIME = GLOBAL_TIME + 1;
-		}
-	}
-	
+	private List<Passageiro> visitantes;
+
 	public ParqueDiversoes(MontanhaRussa montanhaRussa){
 		this.montanhaRussa = montanhaRussa;
-		GLOBAL_TIME = 0;
-		this.start();
+	}
+	
+	public void init(List<Passageiro> visitantes){
+		this.visitantes = visitantes;
+		
+			try {
+				if(montanhaRussa.getQtdPasseiosLimite() > this.visitantes.size()){
+					throw new Exception("O numero de visitantes é insuficiente para brincar na Montanha Russa!");
+				}else{
+					montanhaRussa.init();
+					
+					//Tempo de variação em que um passageiro entra no parque (millisegundos)
+					RandInt randInt = new RandInt(200, 3000);
+					
+					//Inicialização de passageiros
+					for (Passageiro passageiro : visitantes) {
+						try {
+							Thread.sleep(randInt.rand());
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							System.exit(0);
+						}
+						passageiro.start();
+					}
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
+			}
 	}
 
 	public MontanhaRussa getMontanhaRussa() {

@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 public class Carro extends Thread implements Runnable {
+	
+	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
 
 	private MontanhaRussa montanhaRussaREF;
 	private List<Passageiro> passageiros;
 	private int capacidade;
 	private Semaphore semaphore;
-	private Semaphore embarque;
 
 	public Carro() {
 		this.setCapacidade(0);
@@ -23,54 +24,40 @@ public class Carro extends Thread implements Runnable {
 		this.passageiros = new ArrayList<Passageiro>();
 		this.montanhaRussaREF = montanhaRussaREF;
 		semaphore = new Semaphore(capacidade);
-		embarque = new Semaphore(1);
 	}
 
 	public void run() {
-		load();
-		while (true) {
-			delay();
-			if (getQtdPassageiros() == capacidade) {
+		while ( montanhaRussaREF.getQtdPasseios() < montanhaRussaREF.getQtdPasseiosLimite()) {
+			if (semaphore.availablePermits() == 0) {
 				Passeio passeio = new Passeio(montanhaRussaREF.getTrilha());
 				passeio.start();
 				try {
 					passeio.join();
+					montanhaRussaREF.someQtdPasseios();
 					unload();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
+					System.exit(0);
 				}
 			}
-		}
-	}
-
-	private void delay() {
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
 		}
 	}
 
 	public void embarcar(Passageiro passageiro) {
-
 		try {
-			embarque.acquire();
-			if (passageiros.size() == capacidade)
-				Notes.print("[CARRO] Fila de espera anterior: " + semaphore.getQueueLength() + ".");
+			if (semaphore.availablePermits() == 0)
+				Notes.print(TAG+"Fila de espera: " + (semaphore.getQueueLength() + 1) + ".");
+
 			semaphore.acquire();
+
 			passageiros.add(passageiro);
-			Notes.print("[CARRO] " + passageiro.getID() + " embarcou no carro.");
-			Notes.print("[CARRO] Lotação do carro: " + passageiros.size() + ".");
-			embarque.release();
-//			Notes.print("[CARRO] aeww");
-			synchronized (passageiro) {
-				while (contemPassageiro(passageiro)) {
-					passageiro.wait();
-				}
-			}
+
+			Notes.print(TAG + passageiro.getID() + " embarcou no carro.");
+			Notes.print(TAG + "Lotação do carro: " + passageiros.size() + ". " + passageiros.toString());
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 
@@ -78,31 +65,21 @@ public class Carro extends Thread implements Runnable {
 		return passageiros.contains(passageiro);
 	}
 
-	public void load() {
-		Notes.print("[CARRO] load.");
-
-		embarque.release();
-
+	public void load() /* throws Exception */ {
+		Notes.print(TAG + "load.");
+		semaphore.release(capacidade);
 	}
 
 	public void unload() {
-		Notes.print("[CARRO] unload.");
-		try {
+		Notes.print(TAG + "unload.");
 
-			embarque.acquire();
-			Iterator<Passageiro> itPassageiros = passageiros.iterator();
-			while (itPassageiros.hasNext()) {
-				itPassageiros.next().unboard();
-				semaphore.release();
-			}
-			passageiros.clear();
-			
-			load();
-
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		Iterator<Passageiro> itPassageiros = passageiros.iterator();
+		while (itPassageiros.hasNext()) {
+			itPassageiros.next().unboard();
+			itPassageiros.remove();
 		}
 
+		load();
 	}
 
 	public int getCapacidade() {

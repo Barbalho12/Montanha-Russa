@@ -13,7 +13,6 @@ public class Notes {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss"); 
 		date = new Date();
 		return dateFormat.format(date); 
-//		return time;
 	}
 	
 	public static void print(String message){

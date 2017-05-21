@@ -4,17 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MontanhaRussa {
+	
+	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
+	
 	private Carro carro;
 	private Trilha trilha;
 	private int qtdPasseiosLimite;
+	private int qtdPasseios;
 	
 	private List<Passageiro> filaEmbarque;
 	
-	public MontanhaRussa(int capacidadecarro, int distanciaTrilha){
-		filaEmbarque = new ArrayList<Passageiro>();
-		carro = new Carro(capacidadecarro, this);
-		trilha = new Trilha(distanciaTrilha);
-		carro.start();
+	public MontanhaRussa(int capacidadecarro, int distanciaTrilha, int qtdPasseiosLimite){
+		this.filaEmbarque = new ArrayList<Passageiro>();
+		this.carro = new Carro(capacidadecarro, this);
+		this.trilha = new Trilha(distanciaTrilha);
+		this.qtdPasseiosLimite = qtdPasseiosLimite;
+		this.qtdPasseios = 0;
+	}
+	
+	public void init(){
+		this.carro.start();
 	}
 	
 	public int getQtdPasseiosLimite() {
@@ -37,9 +46,9 @@ public class MontanhaRussa {
 	}
 	
 	public void tentarBrincar(Passageiro passageiro) {
-		Notes.print("[MONTANHA_RUSSA] "+passageiro.getID()+ " está chegando na Montanha Russa.");
+		Notes.print(TAG + passageiro.getID()+ " está chegando na Montanha Russa.");
 		passageiro.board(carro);
-		Notes.print("[MONTANHA_RUSSA] "+passageiro.getID()+ " saindo da Montanha Russa.");
+		Notes.print(TAG + passageiro.getID()+ " saindo da Montanha Russa.");
 	}
 	
 	public List<Passageiro> getFilaEmbarque() {
@@ -50,4 +59,12 @@ public class MontanhaRussa {
 		this.filaEmbarque = filaEmbarque;
 	}
 
+	public void someQtdPasseios() {
+		qtdPasseios+=1;
+		Notes.print(TAG + qtdPasseios + " passeios realizados.");
+	}
+	
+	public int getQtdPasseios() {
+		return qtdPasseios;
+	}
 }

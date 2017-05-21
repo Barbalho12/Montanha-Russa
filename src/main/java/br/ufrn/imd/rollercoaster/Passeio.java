@@ -2,6 +2,8 @@ package br.ufrn.imd.rollercoaster;
 
 public class Passeio extends Thread implements Runnable{
 	
+	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
+	
 	private double tempo;
 	
 	private double distanciaPercorrida;
@@ -42,18 +44,19 @@ public class Passeio extends Thread implements Runnable{
 	}
 
 	public void run() {
-		Notes.print("[PASSEIO] Iniciando passeio pela trilha.");
+		Notes.print(TAG + "Iniciando passeio pela trilha.");
 		while (distanciaPercorrida < trilha.getDistancia()) {
 			double percent = (distanciaPercorrida*(1.0) / trilha.getDistancia())*100.0;
 			distanciaPercorrida += 1;
-			Notes.print("[PASSEIO] passeando na Montanha Russa ("+percent+"%)");
+			Notes.print(TAG + "passeando na Montanha Russa ("+percent+"%)");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				System.exit(0);
 			}
 		}
-		Notes.print("[PASSEIO] Fim do passeio ("+100+"%)");
+		Notes.print(TAG + "Fim do passeio ("+100+"%)");
 	}
 
 

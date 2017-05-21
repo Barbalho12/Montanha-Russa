@@ -1,54 +1,46 @@
 package br.ufrn.imd.rollercoaster;
-
 import java.util.concurrent.Semaphore;
 
 import br.ufrn.imd.rollercoaster.util.RandInt;
 
-public class Passageiro extends Thread implements Runnable {
-	
+public abstract class Visitante {
+
 	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"] ";
-
-	private final static int MAX_SEG_PASSEIO_PARQUE = 10;
-	private final static int MIN_SEG_PASSEIO_PARQUE = 4;
-
+	
 	private RandInt randInt;
 	private int id;
 	ParqueDiversoes parqueDiversoesREF;
 	private Semaphore parado;
 
-	public Passageiro(int id, ParqueDiversoes parqueDiversoesREF) {
-		this.randInt = new RandInt(MIN_SEG_PASSEIO_PARQUE, MAX_SEG_PASSEIO_PARQUE);
+	public Visitante(int id, ParqueDiversoes parqueDiversoesREF) {
 		this.parqueDiversoesREF = parqueDiversoesREF;
-		setId(id);
+		this.id = id;
 		this.parado = new Semaphore(0);
 	}
 
 
 	public void run() {
 		Notes.print(TAG + id + " Chegou ao Parque de diversões.");
-		MontanhaRussa montanhaRussaREF = parqueDiversoesREF.getMontanhaRussa();
 		while (true) {
-			montanhaRussaREF.tentarBrincar(this);
-			passearNoParque();
+			action();
 		}
 	}
-
-	public void board(Carro carro) {
-		Notes.print(TAG + id + " try Board.");
-		carro.embarcar(this);
+	
+	public void parar(){
 		try {
-			this.parado.acquire();
+			parado.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			System.exit(0);
 		}
 	}
-
-	public synchronized void unboard() {
-		Notes.print(TAG + id + " Unboard.");
-		this.parado.release();
+	
+	public void continuar(){
+		parado.release();
 	}
+	
+	public abstract void action();
 
+	@SuppressWarnings("unused")
 	private void passearNoParque() {
 		try {
 			int tempo_seg = randInt.rand();
@@ -73,5 +65,4 @@ public class Passageiro extends Thread implements Runnable {
 	public String toString() {
 		return  " ["+id+"] ";
 	}
-	
 }
