@@ -18,17 +18,17 @@ public class ParqueDiversoes{
 	
 	public void init(List<Visitante> visitantes){
 		this.visitantes = visitantes;
-		Notes.print(TAG+"O Parque de divers√µes est√° aberto.");
+		Notes.print(TAG+"O Parque de diversıes est· aberto.");
 			try {
 				if(montanhaRussa.getCarro().getCapacidade() > this.visitantes.size()){
-					throw new Exception("O numero de visitantes √© insuficiente para brincar na Montanha Russa!");
+					throw new Exception("O numero de visitantes È insuficiente para brincar na Montanha Russa!");
 				}else{
 					montanhaRussa.init();
 					
-					//Tempo de varia√ß√£o em que um passageiro entra no parque (millisegundos)
+					//Tempo de variaÁ„o em que um passageiro entra no parque (millisegundos)
 					RandInt randInt = new RandInt(200, 1000);
 					
-					//Inicializa√ß√£o de passageiros
+					//InicializÁ„o de passageiros
 					for (Visitante passageiro : visitantes) {
 						try {
 							Thread.sleep(randInt.rand());
@@ -53,7 +53,7 @@ public class ParqueDiversoes{
 					System.exit(0);
 				}
 			}
-			Notes.print(TAG+"O Parque de divers√µes encerrou suas atividades.");
+			Notes.print(TAG+"O Parque de diversıes encerrou suas atividades.");
 	}
 
 	public MontanhaRussa getMontanhaRussa() {

@@ -25,7 +25,7 @@ public abstract class Visitante extends Thread{
 	}
 
 	public void run() {
-		Notes.print(TAG + toString()  + " Chegou ao Parque de divers√µes.");
+		Notes.print(TAG + toString()  + " Chegou ao Parque de diversıes.");
 		while (parqueDiversoesREF.getMontanhaRussa().isAberto()) {
 			action();
 		}
@@ -52,7 +52,7 @@ public abstract class Visitante extends Thread{
 			int tempo_seg = randInt.rand();
 			Notes.print(TAG + toString() + " Passeando No Parque por "+tempo_seg+" segundos.");
 			Thread.sleep(tempo_seg * 1000);
-			Notes.print(TAG + toString()  + " Passeio No Parque conclu√≠do.");
+			Notes.print(TAG + toString()  + " Passeio No Parque concluÌdo.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			System.exit(0);

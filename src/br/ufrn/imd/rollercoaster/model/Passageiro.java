@@ -13,7 +13,7 @@ public class Passageiro extends Visitante{
 	public Passageiro(int id, ParqueDiversoes parqueDiversoesREF) {
 		super(id, parqueDiversoesREF);
 		
-		/*Tempo de duraÃ§Ã£o de passeios*/
+		/*Tempo de duração de passeios*/
 		setRandInt(new RandInt(MIN_SEG_PASSEIO_PARQUE, MAX_SEG_PASSEIO_PARQUE));
 	}
 	
