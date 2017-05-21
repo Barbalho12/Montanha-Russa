@@ -82,9 +82,9 @@ public class Carro extends Thread{
 				passageiros.add(passageiro);
 
 				Notes.print(TAG + passageiro.toString() + " embarcou no carro.");
-				Notes.print(TAG + "LotaÃ§Ã£o do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
+				Notes.print(TAG + "Lotação do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
 			}else{
-				Notes.print(TAG + passageiro.toString() + " NÃ£o conseguiu embarcar.");
+				Notes.print(TAG + passageiro.toString() + " Não conseguiu embarcar.");
 				return false;
 			}
 			
