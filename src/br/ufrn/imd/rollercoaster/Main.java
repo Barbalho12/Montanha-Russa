@@ -26,11 +26,11 @@ public class Main {
 		
 		ParqueDiversoes parqueDiversoes = new ParqueDiversoes(montanhaRussa);
 		
-		//Criação de passageiros
+		//CriaÃ§Ã£o de passageiros
 		List<Visitante> visitantes = new ArrayList<Visitante>();
 		for (int i = 0; i < QUANTIDADE_PASSAGEIROS; i++) {
 			
-			/*Os visitantes terão ciclo de vida de passageiro da motanha russa*/
+			/*Os visitantes terÃ£o ciclo de vida de passageiro da motanha russa*/
 			Passageiro passageiro = new Passageiro(i, parqueDiversoes);
 			visitantes.add(passageiro);
 		}

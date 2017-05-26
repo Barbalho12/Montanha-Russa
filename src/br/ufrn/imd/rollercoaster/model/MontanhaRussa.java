@@ -50,7 +50,7 @@ public class MontanhaRussa {
 	}
 	
 	public void tentarBrincar(Passageiro passageiro) {
-		Notes.print(TAG + passageiro.toString()+ " est· chegando na Montanha Russa.");
+		Notes.print(TAG + passageiro.toString()+ " est√° chegando na Montanha Russa.");
 		passageiro.board(carro);
 		Notes.print(TAG + passageiro.toString()+ " saindo da Montanha Russa.");
 	}

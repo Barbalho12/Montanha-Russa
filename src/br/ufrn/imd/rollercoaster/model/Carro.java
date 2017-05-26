@@ -1,6 +1,7 @@
 package br.ufrn.imd.rollercoaster.model;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -15,12 +16,14 @@ public class Carro extends Thread{
 	private List<Passageiro> passageiros;
 	private int capacidade;
 	private Semaphore semaphore;
+	private Semaphore entrando;
 
 	public Carro(int capacidade, MontanhaRussa montanhaRussaREF) {
 		this.setCapacidade(capacidade);
 		this.passageiros = new ArrayList<Passageiro>();
 		this.montanhaRussaREF = montanhaRussaREF;
 		semaphore = new Semaphore(capacidade);
+		entrando = new Semaphore(1);
 		FecharCarro();
 	}
 	
@@ -79,16 +82,18 @@ public class Carro extends Thread{
 			
 			if(montanhaRussaREF.isAberto()){
 
+				entrando.acquire();
 				passageiros.add(passageiro);
-
 				Notes.print(TAG + passageiro.toString() + " embarcou no carro.");
-				Notes.print(TAG + "Lotação do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
+				Notes.print(TAG + "LotaÃ§Ã£o do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
+				entrando.release();
+				
 			}else{
-				Notes.print(TAG + passageiro.toString() + " Não conseguiu embarcar.");
+				Notes.print(TAG + passageiro.toString() + " NÃ£o conseguiu embarcar.");
 				return false;
 			}
 			
-		} catch (InterruptedException e) {
+		} catch (InterruptedException | ConcurrentModificationException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
