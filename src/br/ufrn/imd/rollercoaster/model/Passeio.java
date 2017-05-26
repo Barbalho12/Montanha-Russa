@@ -3,7 +3,7 @@ package br.ufrn.imd.rollercoaster.model;
 import br.ufrn.imd.rollercoaster.Mensagens;
 import br.ufrn.imd.rollercoaster.util.Notes;
 
-public class Passeio extends Thread{
+public class Passeio{
 	
 	private double tempo;
 	

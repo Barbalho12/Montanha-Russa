@@ -23,7 +23,7 @@ public class Carro extends Thread{
 		this.montanhaRussaREF = montanhaRussaREF;
 		semaphore = new Semaphore(capacidade);
 		entrando = new Semaphore(1);
-		FecharCarro();
+		fecharCarro();
 	}
 	
 	public void run() {
@@ -57,13 +57,7 @@ public class Carro extends Thread{
 	public void iniciarPasseio(){
 		montanhaRussaREF.someQtdPasseios();
 		Passeio passeio = new Passeio(montanhaRussaREF.getTrilha());
-		passeio.start();
-		try {
-			passeio.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
+		passeio.run();
 	}
 	
 	public boolean carroCheio(){
@@ -101,7 +95,7 @@ public class Carro extends Thread{
 		return true;
 	}
 	
-	public void FecharCarro(){
+	public void fecharCarro(){
 		try {
 			semaphore.acquire(capacidade);
 		} catch (InterruptedException e) {
