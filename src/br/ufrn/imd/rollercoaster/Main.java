@@ -18,7 +18,7 @@ public class Main {
 		int CAPACIDADE_CARRO = 10;
 		int DISTANCIA_TRILHA = 5;
 		int QUANTIDADE_PASSAGEIROS =  40;
-		int QUANTIDADE_PASSEIOS_POR_DIA =  10;
+		int QUANTIDADE_PASSEIOS_POR_DIA =  5;
 		
 		MontanhaRussa montanhaRussa = new MontanhaRussa(CAPACIDADE_CARRO, DISTANCIA_TRILHA, QUANTIDADE_PASSEIOS_POR_DIA);
 		
@@ -34,6 +34,8 @@ public class Main {
 		}
 		
 		parqueDiversoes.init(visitantes);
+		
+		parqueDiversoes.printRelatorio();
 
 	}
 

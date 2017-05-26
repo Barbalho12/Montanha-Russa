@@ -14,6 +14,7 @@ public abstract class Visitante extends Thread{
 	private int id;
 	private Semaphore parado;
 	private ParqueDiversoes parqueDiversoesREF;
+	private int tempoPasseandoNoParque;
 	
 	public Visitante(int id, ParqueDiversoes parqueDiversoesREF) {
 		this.parqueDiversoesREF = parqueDiversoesREF;
@@ -21,6 +22,7 @@ public abstract class Visitante extends Thread{
 		this.parado = new Semaphore(0);
 		this.randInt = new RandInt(MIN_SEG_PASSEIO_PARQUE, MAX_SEG_PASSEIO_PARQUE);
 		this.parado = new Semaphore(0);
+		this.setTempoPasseandoNoParque(0);
 	}
 
 	public void run() {
@@ -52,10 +54,15 @@ public abstract class Visitante extends Thread{
 			Notes.print(this, Mensagens.VISITANTE_PASSEANDO, toString(), tempo_seg);
 			Thread.sleep(tempo_seg * 1000);
 			Notes.print(this, Mensagens.VISITANTE_PASSEIO_CONCLUIDO, toString());
+			setTempoPasseandoNoParque(getTempoPasseandoNoParque() + tempo_seg);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
+	}
+	
+	public void gerarRelatorio(){
+		Notes.print(this, Mensagens.VISITANTE_RELATORIO, toString(), tempoPasseandoNoParque);
 	}
 
 
@@ -98,6 +105,14 @@ public abstract class Visitante extends Thread{
 
 	public void setParado(Semaphore parado) {
 		this.parado = parado;
+	}
+
+	public int getTempoPasseandoNoParque() {
+		return tempoPasseandoNoParque;
+	}
+
+	public void setTempoPasseandoNoParque(int tempoPasseandoNoParque) {
+		this.tempoPasseandoNoParque = tempoPasseandoNoParque;
 	}
 
 
