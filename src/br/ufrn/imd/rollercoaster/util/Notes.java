@@ -15,8 +15,10 @@ public class Notes {
 		return dateFormat.format(date); 
 	}
 	
-	public static void print(String message){
-		System.out.println(getHora() + "  " + count++ + "\t"+message);
+	public static void print(Object obClass, String message, Object... object) {
+		String TAG = "["+obClass.getClass().getSimpleName().toUpperCase()+"]\t";
+		System.out.printf(getHora() + "  " + count++ + "\t"+TAG+message+"\n",object);
+		
 	}
 	
 

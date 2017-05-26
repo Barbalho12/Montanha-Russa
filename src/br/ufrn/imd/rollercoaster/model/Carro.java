@@ -6,11 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import br.ufrn.imd.rollercoaster.Mensagens;
 import br.ufrn.imd.rollercoaster.util.Notes;
 
 public class Carro extends Thread{
-	
-	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"]\t";
 
 	private MontanhaRussa montanhaRussaREF;
 	private List<Passageiro> passageiros;
@@ -28,26 +27,25 @@ public class Carro extends Thread{
 	}
 	
 	public void run() {
-		load();
-		while ( montanhaRussaREF.isAberto()) {
-			if (carroCheio()) {
-				iniciarPasseio();
-				unload();
-				load();
+		load(); //Passageiros podem entrar
+		while ( montanhaRussaREF.isAberto()) { //enquanto limite de passeios ok
+			if (carroCheio()) { //Se carro tiver lotado
+				iniciarPasseio(); //Passeia pela trilha ... conluido passeio
+				unload(); //Passageiros podem sair
+				load(); //novos passageiros podem entrar
 			}
 		}
-		semaphore.release(semaphore.getQueueLength());
 	}
 	
 	public void load() {
 		if (montanhaRussaREF.isAberto()){
-			Notes.print(TAG + "load.");
+			Notes.print(this, "load.");
 		}
 		semaphore.release(capacidade);
 	}
 
 	public void unload() {
-		Notes.print(TAG + "unload.");
+		Notes.print(this, "unload.");
 
 		Iterator<Passageiro> itPassageiros = passageiros.iterator();
 		while (itPassageiros.hasNext()) {
@@ -75,7 +73,7 @@ public class Carro extends Thread{
 	public boolean embarcar(Passageiro passageiro) {
 		try {
 			if (semaphore.availablePermits() == 0){
-				Notes.print(TAG+"Fila de espera: " + (semaphore.getQueueLength() + 1) + ".");
+				Notes.print(this, Mensagens.CARRO_FILA_ESPERA,(semaphore.getQueueLength() + 1));
 			}
 			
 			semaphore.acquire();
@@ -83,13 +81,15 @@ public class Carro extends Thread{
 			if(montanhaRussaREF.isAberto()){
 
 				entrando.acquire();
+				
 				passageiros.add(passageiro);
-				Notes.print(TAG + passageiro.toString() + " embarcou no carro.");
-				Notes.print(TAG + "Lotação do carro: " + passageiros.size()+"/"+capacidade + ". " + passageiros.toString());
+				Notes.print(this, Mensagens.CARRO_PASSAGEIRO_EMBARCOU, passageiro.toString());
+				Notes.print(this, Mensagens.CARRO_LOTACAO, passageiros.size(), capacidade, passageiros.toString());
+				
 				entrando.release();
 				
 			}else{
-				Notes.print(TAG + passageiro.toString() + " Não conseguiu embarcar.");
+				Notes.print(this, Mensagens.CARRO_NO_EMBARCOU, passageiro.toString());
 				return false;
 			}
 			
@@ -108,6 +108,10 @@ public class Carro extends Thread{
 			e.printStackTrace();
 			System.exit(0);
 		}
+	}
+	
+	public void liberarFila(){
+		semaphore.release(semaphore.getQueueLength());
 	}
 
 	public boolean contemPassageiro(Passageiro passageiro) {

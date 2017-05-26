@@ -1,19 +1,18 @@
 package br.ufrn.imd.rollercoaster.model;
 
+import br.ufrn.imd.rollercoaster.Mensagens;
 import br.ufrn.imd.rollercoaster.util.Notes;
 import br.ufrn.imd.rollercoaster.util.RandInt;
 
 public class Passageiro extends Visitante{
 	
-	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"]\t";
-
 	private final static int MAX_SEG_PASSEIO_PARQUE = 10;
 	private final static int MIN_SEG_PASSEIO_PARQUE = 4;
 
 	public Passageiro(int id, ParqueDiversoes parqueDiversoesREF) {
 		super(id, parqueDiversoesREF);
 		
-		/*Tempo de duraÃ§Ã£o de passeios*/
+		/*Tempo de duração de passeios*/
 		setRandInt(new RandInt(MIN_SEG_PASSEIO_PARQUE, MAX_SEG_PASSEIO_PARQUE));
 	}
 	
@@ -24,7 +23,7 @@ public class Passageiro extends Visitante{
 	}
 
 	public void board(Carro carro) {
-		Notes.print(TAG + toString() + " try Board.");
+		Notes.print(this, Mensagens.PASSAGEIRO_BOARD, toString());
 		if(carro.embarcar(this)){
 			parar();
 		}else{
@@ -33,7 +32,7 @@ public class Passageiro extends Visitante{
 	}
 
 	public void unboard() {
-		Notes.print(TAG + toString() + " Unboard.");
+		Notes.print(this, Mensagens.PASSAGEIRO_UNBOARD, toString());
 		continuar();
 	}
 

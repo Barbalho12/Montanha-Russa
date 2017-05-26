@@ -1,10 +1,9 @@
 package br.ufrn.imd.rollercoaster.model;
 
+import br.ufrn.imd.rollercoaster.Mensagens;
 import br.ufrn.imd.rollercoaster.util.Notes;
 
 public class Passeio extends Thread{
-	
-	private final String TAG = "["+this.getClass().getSimpleName().toUpperCase()+"]\t";
 	
 	private double tempo;
 	
@@ -46,11 +45,11 @@ public class Passeio extends Thread{
 	}
 
 	public void run() {
-		Notes.print(TAG + "Iniciando passeio pela trilha.");
+		Notes.print(this, Mensagens.PASSEIO_INICIANDO);
 		while (distanciaPercorrida < trilha.getDistancia()) {
 			double percent = (distanciaPercorrida*(1.0) / trilha.getDistancia())*100.0;
 			distanciaPercorrida += 1;
-			Notes.print(TAG + "passeando na Montanha Russa ("+percent+"%)");
+			Notes.print(this, Mensagens.PASSEIO_STATUS, percent);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -58,7 +57,7 @@ public class Passeio extends Thread{
 				System.exit(0);
 			}
 		}
-		Notes.print(TAG + "Fim do passeio ("+100+"%)");
+		Notes.print(this, Mensagens.PASSEIO_FIM, 100);
 	}
 
 }
