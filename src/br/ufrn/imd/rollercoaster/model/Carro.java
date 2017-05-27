@@ -23,7 +23,7 @@ public class Carro extends Thread{
 		this.montanhaRussaREF = montanhaRussaREF;
 		semaphore = new Semaphore(capacidade);
 		entrando = new Semaphore(1);
-		fecharCarro();
+		fecharCarro(); //Esperar load para o primeiro passsageiro entrar no carro
 	}
 	
 	public void run() {
