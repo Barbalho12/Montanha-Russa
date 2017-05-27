@@ -2,25 +2,27 @@ package br.ufrn.imd.rollercoaster.model;
 
 import br.ufrn.imd.rollercoaster.Mensagens;
 import br.ufrn.imd.rollercoaster.util.Notes;
-import br.ufrn.imd.rollercoaster.util.RandInt;
 
 public class Passageiro extends Visitante{
 	
-	private final static int MAX_SEG_PASSEIO_PARQUE = 10;
-	private final static int MIN_SEG_PASSEIO_PARQUE = 4;
 	private int qtdPasseios;
+	private MontanhaRussa montanhaRussaREF;
 
 	public Passageiro(int id, ParqueDiversoes parqueDiversoesREF) {
 		super(id, parqueDiversoesREF);
 		this.setQtdPasseios(0);
-		/*Tempo de duração de passeios*/
-		setRandInt(new RandInt(MIN_SEG_PASSEIO_PARQUE, MAX_SEG_PASSEIO_PARQUE));
+		this.montanhaRussaREF = parqueDiversoesREF.getMontanhaRussa();
 	}
 	
 	@Override
 	public void action() {
 		getParqueDiversoesREF().getMontanhaRussa().tentarBrincar(this);
 		passearNoParque();
+	}
+	
+	@Override
+	public boolean condicaoPermanencia() {
+		return montanhaRussaREF.getCarro().isLigado();
 	}
 
 	public void board(Carro carro) {
@@ -29,6 +31,7 @@ public class Passageiro extends Visitante{
 			parar();
 			setQtdPasseios(getQtdPasseios() + 1);
 		}else{
+//			Notes.print(this, Mensagens.PASSAGEIRO_BOARD, toString());
 			continuar();
 		}
 	}
@@ -50,5 +53,7 @@ public class Passageiro extends Visitante{
 	public void setQtdPasseios(int qtdPasseios) {
 		this.qtdPasseios = qtdPasseios;
 	}
+
+	
 
 }

@@ -16,11 +16,16 @@ public class Carro extends Thread{
 	private int capacidade;
 	private Semaphore semaphore;
 	private Semaphore entrando;
+	private int qtdPasseios;
+	private int qtdPasseiosLimite;
+	private boolean ligado;
 
-	public Carro(int capacidade, MontanhaRussa montanhaRussaREF) {
+	public Carro(int capacidade, MontanhaRussa montanhaRussaREF, int qtdPasseiosLimite) {
 		this.setCapacidade(capacidade);
 		this.passageiros = new ArrayList<Passageiro>();
 		this.montanhaRussaREF = montanhaRussaREF;
+		this.qtdPasseiosLimite = qtdPasseiosLimite;
+		this.qtdPasseios = 0;
 		semaphore = new Semaphore(capacidade);
 		entrando = new Semaphore(1);
 		fecharCarro(); //Esperar load para o primeiro passsageiro entrar no carro
@@ -28,7 +33,7 @@ public class Carro extends Thread{
 	
 	public void run() {
 		load(); //Passageiros podem entrar
-		while ( montanhaRussaREF.isAberto()) { //enquanto limite de passeios ok
+		while ( isLigado()) { //enquanto limite de passeios ok
 			if (carroCheio()) { //Se carro tiver lotado
 				iniciarPasseio(); //Passeia pela trilha ... conluido passeio
 				unload(); //Passageiros podem sair
@@ -38,7 +43,7 @@ public class Carro extends Thread{
 	}
 	
 	public void load() {
-		if (montanhaRussaREF.isAberto()){
+		if (isLigado()){
 			Notes.print(this, "load.");
 		}
 		semaphore.release(capacidade);
@@ -55,13 +60,25 @@ public class Carro extends Thread{
 	}
 	
 	public void iniciarPasseio(){
-		montanhaRussaREF.someQtdPasseios();
+		someQtdPasseios();
 		Passeio passeio = new Passeio(montanhaRussaREF.getTrilha());
 		passeio.run();
+		Notes.print(this, Mensagens.CARRO_QTD_PASSEIO, qtdPasseios, qtdPasseiosLimite);
+	}
+	
+	public void someQtdPasseios() {
+		qtdPasseios+=1;
+		
+		if(qtdPasseios == qtdPasseiosLimite){
+			setLigado(false);
+			Notes.print(this, Mensagens.CARRO_LIMITE);
+			liberarFila();
+		}
 	}
 	
 	public boolean carroCheio(){
-		return semaphore.availablePermits() == 0;
+		//Todos as pessoas estão no carro, nem entrando nem esperando para entrar.
+		return semaphore.availablePermits() == 0 && !entrando.hasQueuedThreads() && entrando.availablePermits() != 0;
 	}
 
 	public boolean embarcar(Passageiro passageiro) {
@@ -72,7 +89,7 @@ public class Carro extends Thread{
 			
 			semaphore.acquire();
 			
-			if(montanhaRussaREF.isAberto()){
+			if(isLigado()){
 
 				entrando.acquire();
 				
@@ -122,6 +139,25 @@ public class Carro extends Thread{
 
 	public int getQtdPassageiros() {
 		return passageiros.size();
+	}
+
+	public boolean isLigado() {
+		return ligado;
+	}
+
+	public void setLigado(boolean ligado) {
+		this.ligado = ligado;
+	}
+	
+	public int getQtdPasseios() {
+		return qtdPasseios;
+	}
+
+	public int getQtdPasseiosLimite() {
+		return qtdPasseiosLimite;
+	}
+	public void setQtdPasseiosLimite(int qtdPasseiosLimite) {
+		this.qtdPasseiosLimite = qtdPasseiosLimite;
 	}
 
 }

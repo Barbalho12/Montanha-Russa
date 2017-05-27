@@ -19,11 +19,13 @@ public class ParqueDiversoes{
 	
 	public void init(List<Visitante> visitantes){
 		this.visitantes = visitantes;
-		Notes.print(this, Mensagens.PARQUEDIVERSOES_ABERTO);
+		
 			try {
 				if(montanhaRussa.getCarro().getCapacidade() > this.visitantes.size()){
 					throw new Exception(Mensagens.PARQUEDIVERSOES_NUMERO_VISITANTES_EXCPETION);
 				}else{
+					Notes.print(this, Mensagens.PARQUEDIVERSOES_ABERTO);
+					
 					montanhaRussa.init();
 					temporizador = System.currentTimeMillis(); 
 					
@@ -43,7 +45,8 @@ public class ParqueDiversoes{
 				}
 				
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.err.println(e.getMessage());
+//				e.printStackTrace();
 				System.exit(1);
 			}
 			

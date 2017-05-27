@@ -7,20 +7,15 @@ public class MontanhaRussa {
 
 	private Carro carro;
 	private Trilha trilha;
-	private int qtdPasseiosLimite;
-	private int qtdPasseios;
-	private boolean aberto;
 	
 	public MontanhaRussa(int capacidadecarro, int distanciaTrilha, int qtdPasseiosLimite){
-		this.carro = new Carro(capacidadecarro, this);
+		this.carro = new Carro(capacidadecarro, this, qtdPasseiosLimite);
 		this.trilha = new Trilha(distanciaTrilha);
-		this.qtdPasseiosLimite = qtdPasseiosLimite;
-		this.qtdPasseios = 0;
 	}
 	
 	public void init(){
+		carro.setLigado(true);
 		this.carro.start();
-		setAberto(true);
 	}
 	
 	public void tentarBrincar(Passageiro passageiro) {
@@ -28,35 +23,7 @@ public class MontanhaRussa {
 		passageiro.board(carro);
 		Notes.print(this, Mensagens.MONTANHARUSSA_PASSAGEIRO_SAINDO, passageiro.toString());
 	}
-	
-	public void someQtdPasseios() {
-		qtdPasseios+=1;
-		Notes.print(this, Mensagens.MONTANHARUSSA_QTD_PASSEIO, qtdPasseios, qtdPasseiosLimite);
-		if(qtdPasseios == qtdPasseiosLimite){
-			setAberto(false);
-			Notes.print(this, Mensagens.MONTANHARUSSA_LIMITE);
-			carro.liberarFila();
-		}
-	}
-	
-	public int getQtdPasseios() {
-		return qtdPasseios;
-	}
 
-	public boolean isAberto() {
-		return aberto;
-	}
-
-	public void setAberto(boolean aberto) {
-		this.aberto = aberto;
-	}
-	
-	public int getQtdPasseiosLimite() {
-		return qtdPasseiosLimite;
-	}
-	public void setQtdPasseiosLimite(int qtdPasseiosLimite) {
-		this.qtdPasseiosLimite = qtdPasseiosLimite;
-	}
 	public Trilha getTrilha() {
 		return trilha;
 	}
@@ -68,5 +35,13 @@ public class MontanhaRussa {
 	}
 	public void setCarro(Carro carro) {
 		this.carro = carro;
+	}
+	
+	public int getQtdPasseios() {
+		return carro.getQtdPasseios();
+	}
+
+	public int getQtdPasseiosLimite() {
+		return carro.getQtdPasseiosLimite();
 	}
 }

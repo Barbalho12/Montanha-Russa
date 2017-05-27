@@ -27,11 +27,13 @@ public abstract class Visitante extends Thread{
 
 	public void run() {
 		Notes.print(this, Mensagens.VISITANTE_CHEGOU, toString());
-		while (parqueDiversoesREF.getMontanhaRussa().isAberto()) {
+		while (condicaoPermanencia()) {
 			action();
 		}
 		Notes.print(this, Mensagens.VISITANTE_SAIU, toString());
 	}
+	
+	
 	
 	public void parar(){
 		try {
@@ -47,6 +49,8 @@ public abstract class Visitante extends Thread{
 	}
 	
 	public abstract void action();
+	
+	public abstract boolean condicaoPermanencia();
 
 	protected void passearNoParque() {
 		try {

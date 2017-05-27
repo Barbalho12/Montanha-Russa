@@ -14,8 +14,8 @@ public class Mensagens {
 	
 	public static final String MONTANHARUSSA_CHEGADA_PASSAGEIRO = "%s está chegando na Montanha Russa.";
 	public static final String MONTANHARUSSA_PASSAGEIRO_SAINDO = "%s saindo da Montanha Russa.";
-	public static final String MONTANHARUSSA_QTD_PASSEIO = "%d/%d passeios iniciados.";
-	public static final String MONTANHARUSSA_LIMITE = "O limite de passeios foi atingido. O último passeio será realizado";
+	public static final String CARRO_QTD_PASSEIO = "%d/%d passeios realizados.";
+	public static final String CARRO_LIMITE = "O limite de passeios foi atingido. O último passeio será realizado";
 	
 	public static final String CARRO_FILA_ESPERA = "Fila de espera: %d.";
 	public static final String CARRO_PASSAGEIRO_EMBARCOU = "%s embarcou no carro.";
