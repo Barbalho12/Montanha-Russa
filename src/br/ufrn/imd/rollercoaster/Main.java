@@ -12,7 +12,7 @@ import br.ufrn.imd.rollercoaster.util.Notes;
 public class Main {
 	
 	// Definição de constantes.
-	private static final int QUANTIDADE_VISITANTES_PADRAO = 30;
+	private static final int QUANTIDADE_VISITANTES_PADRAO = 40;
 	private static final int INDICE_VISITANTES = 0;
 	private static final int CAPACIDADE_CARRO_PADRAO = 10;
 	private static final int INDICE_CAPACIDADE_CARRO = 1;
