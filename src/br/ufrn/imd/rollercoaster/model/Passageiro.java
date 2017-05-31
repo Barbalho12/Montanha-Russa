@@ -31,7 +31,6 @@ public class Passageiro extends Visitante{
 			parar();
 			setQtdPasseios(getQtdPasseios() + 1);
 		}else{
-//			Notes.print(this, Mensagens.PASSAGEIRO_BOARD, toString());
 			continuar();
 		}
 	}

@@ -8,13 +8,11 @@ import java.util.List;
 import br.ufrn.imd.rollercoaster.Mensagens;
 import br.ufrn.imd.rollercoaster.util.Notes;
 
-public class Carro extends Thread{
+public class Carro extends Thread {
 
 	private MontanhaRussa montanhaRussaREF;
 	private List<Passageiro> passageiros;
 	private int capacidade;
-//	private Semaphore semaphore;
-//	private Semaphore entrando;
 	private int qtdPasseios;
 	private int qtdPasseiosLimite;
 	private boolean ligado;
@@ -28,46 +26,40 @@ public class Carro extends Thread{
 		this.qtdPasseiosLimite = qtdPasseiosLimite;
 		this.qtdPasseios = 0;
 		this.qtdPassageiros = 0;
-//		semaphore = new Semaphore(capacidade);
-//		entrando = new Semaphore(1);
-//		fecharCarro(); //Esperar load para o primeiro passsageiro entrar no carro
-//		barreira = new Barreira();
-		bloquedor= new LockFila();
+		bloquedor = new LockFila();
 	}
-	
+
+	/**
+	 * Inicia Thread
+	 */
 	public void run() {
-		load(); //Passageiros podem entrar
-		while ( isLigado()) { //enquanto limite de passeios ok
-			if (carroCheio()) { //Se carro tiver lotado
-				iniciarPasseio(); //Passeia pela trilha ... conluido passeio
-				unload(); //Passageiros podem sair
-				load(); //novos passageiros podem entrar
+		load(); // Passageiros podem entrar
+
+		while (isLigado()) { // enquanto limite de passeios ok
+			if (carroCheio()) { // Se carro tiver lotado
+				iniciarPasseio(); // Passeia pela trilha ... conluido passeio
+				unload(); // Passageiros podem sair
+				load(); // novos passageiros podem entrar
 			}
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-//			System.out.println(carroCheio());
+			delay(20);
 		}
 	}
-	
+
+	/**
+	 * Entrada de passageiros permitida
+	 */
 	public void load() {
-		if (isLigado()){
+		if (isLigado()) {
 			Notes.print(this, "load.");
 		}
 		qtdPassageiros = 0;
-//		semaphore.release(capacidade);
-//		if(carroCheio())
-		
-		
-//		for (int i = 0; i < capacidade; i++) {
-//			bloquedor.desploquear();
-//		}
+
 		bloquedor.desploquear(capacidade);
 	}
 
+	/**
+	 * Saída de passageiros permitida
+	 */
 	public void unload() {
 		Notes.print(this, "unload.");
 
@@ -77,90 +69,93 @@ public class Carro extends Thread{
 			itPassageiros.remove();
 		}
 	}
-	
-	public void iniciarPasseio(){
+
+	/**
+	 * Realiza passeio no carro pelo trilho
+	 */
+	public void iniciarPasseio() {
 		someQtdPasseios();
 		Passeio passeio = new Passeio(montanhaRussaREF.getTrilha());
 		passeio.run();
 		Notes.print(this, Mensagens.CARRO_QTD_PASSEIO, qtdPasseios, qtdPasseiosLimite);
 	}
-	
+
+	/**
+	 * Incrementa o numero de passeios, verificando o limite
+	 */
 	public void someQtdPasseios() {
-		qtdPasseios+=1;
-		
-		if(qtdPasseios == qtdPasseiosLimite){
+		qtdPasseios += 1;
+
+		if (qtdPasseios == qtdPasseiosLimite) {
 			setLigado(false);
 			Notes.print(this, Mensagens.CARRO_LIMITE);
 			bloquedor.desploquearTodos();
 		}
 	}
-	
-	public boolean carroCheio(){
-		//Todos as pessoas estão no carro, nem entrando nem esperando para entrar.
-//		return semaphore.availablePermits() == 0 && !entrando.hasQueuedThreads() && entrando.availablePermits() != 0;
+
+	/**
+	 * @return Verdadeiro se o carro está cheio, falso caso contrário
+	 */
+	public boolean carroCheio() {
 		return qtdPassageiros == capacidade;
 	}
-	
-	public synchronized void entrar(Passageiro passageiro){
+
+	/**
+	 * Ato de passageiro entrar no carro, um por vez
+	 * @param passageiro
+	 */
+	public synchronized void entrar(Passageiro passageiro) {
 		passageiros.add(passageiro);
 		Notes.print(this, Mensagens.CARRO_PASSAGEIRO_EMBARCOU, passageiro.toString());
 		Notes.print(this, Mensagens.CARRO_LOTACAO, passageiros.size(), capacidade, passageiros.toString());
 		++qtdPassageiros;
 	}
 
+	/**
+	 * Processo de embarcar, tenta entrar no carro, ou fica na fila esperando.
+	 * @param passageiro
+	 * @return se conseguiu embarcar, falso caso não tenha conseguido
+	 */
 	public boolean embarcar(Passageiro passageiro) {
 		try {
-//			if (semaphore.availablePermits() == 0){
-//				Notes.print(this, Mensagens.CARRO_FILA_ESPERA,(semaphore.getQueueLength() + 1));
-//			}
-//			
-			if(carroCheio()){
-				Notes.print(this, Mensagens.CARRO_FILA_ESPERA,(bloquedor.getTamanhoLista() + 1));
+
+			if (carroCheio()) {
+				Notes.print(this, Mensagens.CARRO_FILA_ESPERA, (bloquedor.getTamanhoLista() + 1));
 				bloquedor.bloquear(passageiro);
 			}
-//			semaphore.acquire();
-			
-			if(isLigado()){
-				
+
+			if (isLigado()) {
+
 				entrar(passageiro);
 
-//				entrando.acquire();
-//				
-//				passageiros.add(passageiro);
-//				Notes.print(this, Mensagens.CARRO_PASSAGEIRO_EMBARCOU, passageiro.toString());
-//				Notes.print(this, Mensagens.CARRO_LOTACAO, passageiros.size(), capacidade, passageiros.toString());
-//				++qtdPassageiros;
-//				entrando.release();
-				
-			}else{
+			} else {
 				Notes.print(this, Mensagens.CARRO_NO_EMBARCOU, passageiro.toString());
 				return false;
 			}
-			
+
 		} catch (ConcurrentModificationException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		
+
 		return true;
 	}
 	
-//	public void fecharCarro(){
-//		try {
-////			semaphore.acquire(capacidade);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//			System.exit(0);
-//		}
-//	}
-	
-//	public void liberarFila(){
-//		bloquedor.desploquearTodos();
-//	}
-
-	public boolean contemPassageiro(Passageiro passageiro) {
-		return passageiros.contains(passageiro);
+	/**
+	 * Tempo de espera ocioso
+	 * @param milisegundos
+	 */
+	private void delay(int milisegundos) {
+		try {
+			Thread.sleep(milisegundos);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
+
+//	public boolean contemPassageiro(Passageiro passageiro) {
+//		return passageiros.contains(passageiro);
+//	}
 
 	public int getCapacidade() {
 		return capacidade;
@@ -181,7 +176,7 @@ public class Carro extends Thread{
 	public void setLigado(boolean ligado) {
 		this.ligado = ligado;
 	}
-	
+
 	public int getQtdPasseios() {
 		return qtdPasseios;
 	}
@@ -189,6 +184,7 @@ public class Carro extends Thread{
 	public int getQtdPasseiosLimite() {
 		return qtdPasseiosLimite;
 	}
+
 	public void setQtdPasseiosLimite(int qtdPasseiosLimite) {
 		this.qtdPasseiosLimite = qtdPasseiosLimite;
 	}

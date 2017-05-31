@@ -1,5 +1,4 @@
 package br.ufrn.imd.rollercoaster.model;
-import java.util.concurrent.Semaphore;
 
 import br.ufrn.imd.rollercoaster.Mensagens;
 import br.ufrn.imd.rollercoaster.util.Notes;
@@ -12,16 +11,13 @@ public abstract class Visitante extends Thread{
 	
 	private RandInt randInt;
 	private int id;
-//	private Semaphore parado;
 	private ParqueDiversoes parqueDiversoesREF;
 	private int tempoPasseandoNoParque;
 	
 	public Visitante(int id, ParqueDiversoes parqueDiversoesREF) {
 		this.parqueDiversoesREF = parqueDiversoesREF;
 		this.id = id;
-//		this.parado = new Semaphore(0);
 		this.randInt = new RandInt(MIN_SEG_PASSEIO_PARQUE, MAX_SEG_PASSEIO_PARQUE);
-//		this.parado = new Semaphore(0);
 		this.setTempoPasseandoNoParque(0);
 	}
 
@@ -36,9 +32,7 @@ public abstract class Visitante extends Thread{
 	
 	
 	public void parar(){
-		
 		try {
-//			parado.acquire();
 			synchronized (this) {
 				wait();
 			}
@@ -49,7 +43,6 @@ public abstract class Visitante extends Thread{
 	}
 	
 	public void continuar(){
-//		parado.release();
 		synchronized (this) {
 			notify();
 		}
@@ -103,20 +96,9 @@ public abstract class Visitante extends Thread{
 		return parqueDiversoesREF;
 	}
 
-
 	public void setParqueDiversoesREF(ParqueDiversoes parqueDiversoesREF) {
 		this.parqueDiversoesREF = parqueDiversoesREF;
 	}
-
-
-//	public Semaphore getParado() {
-//		return parado;
-//	}
-
-
-//	public void setParado(Semaphore parado) {
-//		this.parado = parado;
-//	}
 
 	public int getTempoPasseandoNoParque() {
 		return tempoPasseandoNoParque;
