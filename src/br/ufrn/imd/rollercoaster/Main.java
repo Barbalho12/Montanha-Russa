@@ -33,9 +33,11 @@ public class Main {
 		int QUANTIDADE_PASSAGEIROS =  argumentos.get(INDICE_VISITANTES);
 		int QUANTIDADE_PASSEIOS_POR_DIA =  argumentos.get(INDICE_LIMITE_PASSEIOS);
 		
-		MontanhaRussa montanhaRussa = new MontanhaRussa(CAPACIDADE_CARRO, DISTANCIA_TRILHA, QUANTIDADE_PASSEIOS_POR_DIA);
+		ParqueDiversoes parqueDiversoes = new ParqueDiversoes();
 		
-		ParqueDiversoes parqueDiversoes = new ParqueDiversoes(montanhaRussa);
+		MontanhaRussa montanhaRussa = new MontanhaRussa(CAPACIDADE_CARRO, DISTANCIA_TRILHA, QUANTIDADE_PASSEIOS_POR_DIA, parqueDiversoes);
+		
+		parqueDiversoes.setMontanhaRussa(montanhaRussa);
 		
 		//Criação de passageiros
 		List<Visitante> visitantes = new ArrayList<Visitante>();

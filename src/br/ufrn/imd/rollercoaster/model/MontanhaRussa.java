@@ -7,15 +7,17 @@ public class MontanhaRussa {
 
 	private Carro carro;
 	private Trilha trilha;
+	private ParqueDiversoes parqueREF;
 	
-	public MontanhaRussa(int capacidadecarro, int distanciaTrilha, int qtdPasseiosLimite){
+	public MontanhaRussa(int capacidadecarro, int distanciaTrilha, int qtdPasseiosLimite, ParqueDiversoes parqueREF){
 		this.carro = new Carro(capacidadecarro, this, qtdPasseiosLimite);
 		this.trilha = new Trilha(distanciaTrilha);
+		this.setParqueREF(parqueREF);
 	}
 	
 	public void init(){
-		carro.setLigado(true);
 		this.carro.start();
+		carro.setLigado(true);
 	}
 	
 	public void tentarBrincar(Passageiro passageiro) {
@@ -43,5 +45,13 @@ public class MontanhaRussa {
 
 	public int getQtdPasseiosLimite() {
 		return carro.getQtdPasseiosLimite();
+	}
+
+	public ParqueDiversoes getParqueREF() {
+		return parqueREF;
+	}
+
+	public void setParqueREF(ParqueDiversoes parqueREF) {
+		this.parqueREF = parqueREF;
 	}
 }

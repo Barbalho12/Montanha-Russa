@@ -1,7 +1,6 @@
 package br.ufrn.imd.rollercoaster.model;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class Carro extends Thread {
 	private int qtdPasseiosLimite;
 	private boolean ligado;
 	private int qtdPassageiros;
-	private LockFila bloquedor;
+	private LockLista bloquedor;
 
 	public Carro(int capacidade, MontanhaRussa montanhaRussaREF, int qtdPasseiosLimite) {
 		this.setCapacidade(capacidade);
@@ -26,7 +25,7 @@ public class Carro extends Thread {
 		this.qtdPasseiosLimite = qtdPasseiosLimite;
 		this.qtdPasseios = 0;
 		this.qtdPassageiros = 0;
-		bloquedor = new LockFila();
+		bloquedor = new LockLista();
 	}
 
 	/**
@@ -41,9 +40,10 @@ public class Carro extends Thread {
 				unload(); // Passageiros podem sair
 				load(); // novos passageiros podem entrar
 			}
-			delay(20);
 		}
+		verificacaooFinal();
 	}
+
 
 	/**
 	 * Entrada de passageiros permitida
@@ -103,13 +103,19 @@ public class Carro extends Thread {
 	/**
 	 * Ato de passageiro entrar no carro, um por vez
 	 * @param passageiro
+	 * @throws Exception 
 	 */
-	public synchronized void entrar(Passageiro passageiro) {
+	public synchronized void entrar(Passageiro passageiro) throws Exception {
+		if (!isLigado() || carroCheio()) {	
+			throw new Exception("Carro cheio ou desligado");
+		}
 		passageiros.add(passageiro);
 		Notes.print(this, Mensagens.CARRO_PASSAGEIRO_EMBARCOU, passageiro.toString());
 		Notes.print(this, Mensagens.CARRO_LOTACAO, passageiros.size(), capacidade, passageiros.toString());
 		++qtdPassageiros;
 	}
+	
+	
 
 	/**
 	 * Processo de embarcar, tenta entrar no carro, ou fica na fila esperando.
@@ -119,26 +125,30 @@ public class Carro extends Thread {
 	public boolean embarcar(Passageiro passageiro) {
 		try {
 
-			if (carroCheio()) {
+		
+			if (carroCheio() || bloquedor.getTamanhoLista()>0) {
 				Notes.print(this, Mensagens.CARRO_FILA_ESPERA, (bloquedor.getTamanhoLista() + 1));
 				bloquedor.bloquear(passageiro);
 			}
+			entrar(passageiro);
 
-			if (isLigado()) {
-
-				entrar(passageiro);
-
-			} else {
-				Notes.print(this, Mensagens.CARRO_NO_EMBARCOU, passageiro.toString());
-				return false;
-			}
-
-		} catch (ConcurrentModificationException e) {
-			e.printStackTrace();
-			System.exit(0);
+		} catch (Exception e) {
+			Notes.print(this, Mensagens.CARRO_NO_EMBARCOU, passageiro.toString());
+			return false;
 		}
 
 		return true;
+	}
+	
+	/**
+	 * verifica se ainda tem alguma pessoa esperando e manda ir embora 
+	 */
+	private void verificacaooFinal() {
+		for(Visitante v : montanhaRussaREF.getParqueREF().getVisitantes()){
+			synchronized (v) {
+				v.notify();
+			}
+		}
 	}
 	
 	/**
@@ -153,10 +163,6 @@ public class Carro extends Thread {
 		}
 	}
 
-//	public boolean contemPassageiro(Passageiro passageiro) {
-//		return passageiros.contains(passageiro);
-//	}
-
 	public int getCapacidade() {
 		return capacidade;
 	}
@@ -170,6 +176,7 @@ public class Carro extends Thread {
 	}
 
 	public boolean isLigado() {
+		delay(5);
 		return ligado;
 	}
 

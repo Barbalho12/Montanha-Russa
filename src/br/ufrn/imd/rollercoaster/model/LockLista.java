@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class LockFila {
+public class LockLista {
 	
 	private List<Object> objectsBloqueados; //Lista de objetos bloqueados
 	private final Lock lock = new ReentrantLock(); //Garante exclusão mútua em quase todos métodos
 	
-	public LockFila() {
+	public LockLista() {
 		objectsBloqueados = new ArrayList<>();
 	}
 	

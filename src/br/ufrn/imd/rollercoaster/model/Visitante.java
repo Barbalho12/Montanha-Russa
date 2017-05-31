@@ -29,12 +29,10 @@ public abstract class Visitante extends Thread{
 		Notes.print(this, Mensagens.VISITANTE_SAIU, toString());
 	}
 	
-	
-	
 	public void parar(){
 		try {
 			synchronized (this) {
-				wait();
+				this.wait();
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -44,7 +42,8 @@ public abstract class Visitante extends Thread{
 	
 	public void continuar(){
 		synchronized (this) {
-			notify();
+			this.notify();
+			this.notify();
 		}
 	}
 	

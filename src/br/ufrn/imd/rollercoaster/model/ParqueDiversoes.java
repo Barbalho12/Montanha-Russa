@@ -11,6 +11,18 @@ public class ParqueDiversoes{
 	private MontanhaRussa montanhaRussa;
 	private List<Visitante> visitantes;
 	private long temporizador;
+	
+	public ParqueDiversoes(){
+		
+	}
+
+	public List<Visitante> getVisitantes() {
+		return visitantes;
+	}
+
+	public void setVisitantes(List<Visitante> visitantes) {
+		this.visitantes = visitantes;
+	}
 
 	public ParqueDiversoes(MontanhaRussa montanhaRussa){
 		this.montanhaRussa = montanhaRussa;
@@ -31,7 +43,7 @@ public class ParqueDiversoes{
 					
 					//Tempo de variação em que um passageiro entra no parque (millisegundos)
 					RandInt randInt = new RandInt(200, 1000);
-					
+
 					//Inicialização de passageiros
 					for (Visitante passageiro : visitantes) {
 						try {
@@ -46,7 +58,6 @@ public class ParqueDiversoes{
 				
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
-//				e.printStackTrace();
 				System.exit(1);
 			}
 			
